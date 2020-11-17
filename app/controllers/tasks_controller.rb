@@ -1,4 +1,5 @@
 class TasksController < ApplicationController
+  before_action :set_task, only: [:show, :edit, :update, :destroy]
   # READ (all)
   def index
     @tasks = Task.all
@@ -6,8 +7,6 @@ class TasksController < ApplicationController
   # READ (one) - to get a specific task
 
   def show
-    # use find to show a specific task thanks to its id directly from params
-    @task = Task.find(params[:id])
   end
 
   def new
@@ -22,18 +21,15 @@ class TasksController < ApplicationController
   end
 
   def edit
-    @task = Task.find(params[:id])
   end
 
   def update
-    @task = Task.find(params[:id])
     @task.update(task_params)
     # no need for app/views/tasks/create.html.erb
     redirect_to task_path(@task)
   end
 
   def destroy
-    @task = Task.find(params[:id])
     @task.destroy
 
     # no need for app/views/tasks/destroy.html.erb
@@ -41,6 +37,10 @@ class TasksController < ApplicationController
   end
 
   private
+
+  def set_task
+     @task = Task.find(params[:id])
+  end
 
   def task_params
     params.require(:task).permit(:title, :details, :completed)
